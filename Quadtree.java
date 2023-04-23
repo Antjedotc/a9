@@ -11,10 +11,10 @@ public class Quadtree {
 
         private Color color;
 
-        private Node NE;
-        private Node SE;
-        private Node SW;
-        private Node NW;
+        private Node NE = null;
+        private Node SE = null;
+        private Node SW = null;
+        private Node NW = null;
 
         //constructor using a color
         protected Node(Color color){
@@ -23,7 +23,7 @@ public class Quadtree {
 
         //constructor using rgb values
         protected Node(int r, int g, int b){
-            this.color = new Color(int r, int g, int b);
+            this.color = new Color(r, g, b);
         }
 
         //getters
@@ -36,7 +36,14 @@ public class Quadtree {
         protected void setNE(Node NE){ this.NE = NE; }
         protected void setSE(Node SE){ this.SE = SE; }
         protected void setSW(Node SW){ this.SW = SW; }
-        protected void setNE(Node NW){ this.NW = NW; }
+        protected void setNW(Node NW){ this.NW = NW; }
+
+        protected boolean isLeaf(){
+
+            if (NE == null && SE == null && SW == null && NW == null){ return true; }
+            else return false;
+
+        }
 
     }
     //-----------END OF PRIVATE NODE CLASS
