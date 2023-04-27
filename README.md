@@ -1,2 +1,6 @@
 # a9
-eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+Grace Tsai & Antje Cramer
+
+
+Notes:
+Works on rectangular images
