@@ -159,7 +159,35 @@ public class Quadtree {
 
     public Color[][] export(){
 
+        Color[][] image = new Color[img.getX()][img.getY()];
+
+        exportHelper(image, root);
         
+        return image;
+
+    }
+
+    private void exportHelper(Color[][] image, Node root){
+
+        if (root.isLeaf()){
+
+            for (int i = root.xCoord; i < root.xCoord+root.width; i++){
+                for (int j = root.yCoord; j < root.yCoord+root.height; j++){
+
+                    image[i][j] = root.getColor();
+
+                }
+            }
+
+        } else {
+
+            exportHelper(image, root.getNW());
+            exportHelper(image, root.getNE());
+            exportHelper(image, root.getSW());
+            exportHelper(image, root.getSE());
+
+        }
+
 
     }
 
@@ -169,7 +197,8 @@ public class Quadtree {
         Quadtree cooltree = new Quadtree(img);
         cooltree.subdivide(cooltree.root);
 
-
+        Image export = new Image(cooltree.export());
+        export.writeImg("output.ppm");
 
     }
 
