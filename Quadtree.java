@@ -65,10 +65,14 @@ public class Quadtree {
     //-----------END OF PRIVATE NODE CLASS
 
 
-    //divides the node into quarters and sets those as its children
+    //divides the node into quarters and sets those as its children.
+    /**method subdivide: divides the image into a compressed quadtree
+     * @param n: the node to start from
+     * @param complv: compression level, number of leaves divided by pixel count
+     */
     public void subdivide(Node n){
 
-        if (n.getWidth() > 1 && n.getHeight() > 1){
+        if (n.getWidth() > 0 && n.getHeight() > 0){
 
             int firstHalfWidth = n.width/2;
             int secondHalfWidth = firstHalfWidth;
@@ -84,25 +88,47 @@ public class Quadtree {
                 secondHalfHeight++;
             }
 
-            Node NW = new Node(meanColor(n.xCoord, n.yCoord, firstHalfWidth, firstHalfHeight), n.xCoord, n.yCoord, firstHalfWidth, firstHalfHeight);
+            if ((n.getWidth() == 1 && n.getHeight() > 1) || (n.getHeight() == 1 && n.getWidth() > 1)){
 
-            Node NE = new Node(meanColor((n.xCoord + firstHalfWidth), n.yCoord, secondHalfWidth, firstHalfHeight), (n.xCoord + firstHalfWidth), n.yCoord, secondHalfWidth, firstHalfHeight);
+                Node NW = new Node(meanColor(n.xCoord, n.yCoord, firstHalfWidth, firstHalfHeight), n.xCoord, n.yCoord, firstHalfWidth, firstHalfHeight);
+                Node SE = new Node(meanColor((n.xCoord + firstHalfWidth), (n.yCoord + firstHalfHeight), secondHalfWidth, secondHalfHeight), (n.xCoord + firstHalfWidth), (n.yCoord + firstHalfHeight), secondHalfWidth, secondHalfHeight);
+                
+                n.setNW(NW);
+                n.setSE(SE);
 
-            Node SW = new Node(meanColor(n.xCoord, (n.yCoord + firstHalfHeight), firstHalfWidth, secondHalfHeight), n.xCoord, (n.yCoord + firstHalfHeight), firstHalfWidth, secondHalfHeight);
+                System.out.println(MeanSquaredError(NW));
 
-            Node SE = new Node(meanColor((n.xCoord + firstHalfWidth), (n.yCoord + firstHalfHeight), secondHalfWidth, secondHalfHeight), (n.xCoord + firstHalfWidth), (n.yCoord + firstHalfHeight), secondHalfWidth, secondHalfHeight);
+                subdivide(NW);
+                subdivide(SE);
+
+            } else if (n.getWidth() == 1 & n.getHeight() == 1) {
+
+                System.out.println("Leaf!");
+
+            } else{
+
+                Node NW = new Node(meanColor(n.xCoord, n.yCoord, firstHalfWidth, firstHalfHeight), n.xCoord, n.yCoord, firstHalfWidth, firstHalfHeight);
+
+                Node NE = new Node(meanColor((n.xCoord + firstHalfWidth), n.yCoord, secondHalfWidth, firstHalfHeight), (n.xCoord + firstHalfWidth), n.yCoord, secondHalfWidth, firstHalfHeight);
+
+                Node SW = new Node(meanColor(n.xCoord, (n.yCoord + firstHalfHeight), firstHalfWidth, secondHalfHeight), n.xCoord, (n.yCoord + firstHalfHeight), firstHalfWidth, secondHalfHeight);
+
+                Node SE = new Node(meanColor((n.xCoord + firstHalfWidth), (n.yCoord + firstHalfHeight), secondHalfWidth, secondHalfHeight), (n.xCoord + firstHalfWidth), (n.yCoord + firstHalfHeight), secondHalfWidth, secondHalfHeight);
 
 
-            n.setNW(NW);
-            n.setNE(NE);
-            n.setSW(SW);
-            n.setSE(SE);
+                n.setNW(NW);
+                n.setNE(NE);
+                n.setSW(SW);
+                n.setSE(SE);
 
-            subdivide(NW);
-            subdivide(NE);
-            subdivide(SW);
-            subdivide(SE);
+                System.out.println(MeanSquaredError(NW));
 
+                subdivide(NW);
+                subdivide(NE);
+                subdivide(SW);
+                subdivide(SE);
+
+            }
 
         } 
 
@@ -157,6 +183,10 @@ public class Quadtree {
 
     }
 
+    public double MeanSquaredError(Node n){
+
+    }
+
     public Color[][] export(){
 
         Color[][] image = new Color[img.getX()][img.getY()];
@@ -169,26 +199,28 @@ public class Quadtree {
 
     private void exportHelper(Color[][] image, Node root){
 
-        if (root.isLeaf()){
+        if (root != null){
 
-            for (int i = root.xCoord; i < root.xCoord+root.width; i++){
-                for (int j = root.yCoord; j < root.yCoord+root.height; j++){
+            if (root.isLeaf()){
 
-                    image[i][j] = root.getColor();
+                for (int i = root.xCoord; i < root.xCoord+root.width; i++){
+                    for (int j = root.yCoord; j < root.yCoord+root.height; j++){
 
+                        image[i][j] = root.getColor();
+
+                    }
                 }
+
+            } else {
+
+                exportHelper(image, root.getNW());
+                exportHelper(image, root.getNE());
+                exportHelper(image, root.getSW());
+                exportHelper(image, root.getSE());
+
             }
 
-        } else {
-
-            exportHelper(image, root.getNW());
-            exportHelper(image, root.getNE());
-            exportHelper(image, root.getSW());
-            exportHelper(image, root.getSE());
-
         }
-
-
     }
 
     public static void main(String[] args){
