@@ -43,24 +43,24 @@ public class Image {
                 if (next.contains("#")){
                     reader.nextLine();
                 } else if (j == 0){
-                                        System.out.println(j + ": " + next);
+                                        //System.out.println(j + ": " + next);
                     j++;
                 } else if (j == 1){
-                                        System.out.println(j + ": " + next);
+                                        //System.out.println(j + ": " + next);
                     this.x = Integer.parseInt(next);
                     j++;
                 } else if (j == 2){
-                                        System.out.println(j + ": " + next);
+                                        //System.out.println(j + ": " + next);
                     this.y = Integer.parseInt(next);
                     j++;
                 } else if (j == 3){
-                                        System.out.println(j + ": " + next);
+                                        //System.out.println(j + ": " + next);
                     j++;
                     break;
                 } 
             }
 
-            System.out.println(this.x + " x " + this.y);
+            //System.out.println(this.x + " x " + this.y);
 
             this.canvas = new Color[this.x][this.y];
 
@@ -70,10 +70,9 @@ public class Image {
                 }
             }
 
-            System.out.println("win");
-
         } catch (FileNotFoundException e){
-            System.out.print("you broke it");
+            System.out.println("FILE NOT FOUND");
+            System.exit(0);
         }
 
     }
@@ -161,7 +160,6 @@ public class Image {
         Color[][] newCanvas = new Color[input.x][input.y];
         
         for (int i = 0; i < input.canvas[0].length; i++) {
-            System.out.println("i: " + i);
             for (int j = 0; j < input.canvas.length;j++) {
                 int oldR = input.getCanvas()[j][i].r();
                 int oldG = input.getCanvas()[j][i].g();
