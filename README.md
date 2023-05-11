@@ -13,6 +13,6 @@ run with args:
 -x (weird filter)
 -c (generates 8 images with various compression levels)
 -e (runs edge detection)
--l (adds outlines to nodes)
+-t (adds outlines to nodes)
 
 ** Works on rectangular images
